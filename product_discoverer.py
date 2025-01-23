@@ -16,7 +16,7 @@ from playwright.async_api import async_playwright
 
 app = FastAPI()
 
-OUTPUT_DIR = f"{os.path.expanduser('~')}/Desktop/product-discoverer/output_files"
+OUTPUT_DIR = f"{os.path.expanduser('~')}/Documents/product-discoverer/output_files"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 def ensure_playwright_installed():
@@ -158,6 +158,7 @@ async def extract_product_urls_headless(
     def flush_chunk():
         nonlocal chunk_list
         if chunk_list:
+            print(f"[WRITER] Writing {len(chunk_list)} urls ...")
             with open(output_file, "a", encoding="utf-8") as f:
                 f.write("\n".join(chunk_list) + "\n")
             chunk_list.clear()
@@ -250,7 +251,6 @@ async def crawl_domain_headless(domain: str):
     Crawl a domain using a headless browser to handle JS/infinite scroll.
     """
     
-    ensure_playwright_installed()  # Dynamically install playwright if needed
     loader_task = asyncio.create_task(loader(domain))
 
     try:
@@ -370,6 +370,8 @@ async def start_crawling(request: CrawlRequest, background_tasks: BackgroundTask
     """
 
     updated_domains = await validate_domains(request.domains)
+    
+    ensure_playwright_installed()  # Dynamically install playwright if needed
 
     for domain in updated_domains:
         background_tasks.add_task(crawl_domain_headless, domain)
