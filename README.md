@@ -33,7 +33,9 @@ git clone <repository\_url>
 ### **Run the Application** 
 Start the FastAPI server: 
 
-python product_discoverer.py || uvicorn product_discoverer:app --reload
+python product_discoverer.py
+OR
+uvicorn product_discoverer:app --reload
 
 The application will run on localhost:8000. 
 ### **API Endpoints** 
